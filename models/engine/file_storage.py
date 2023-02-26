@@ -1,25 +1,28 @@
 #!/usr/bin/python3
-""" airbnb file storage module """
+""" module for file storage handling """
 
 import json
 
 
 class FileStorage:
-    """ file storage class """
+    """ defines a class that serializes and de serializes with json """
 
-    __file_path = "file.json"
+    __file_path = "json.file"
     __objects = {}
 
     def all(self):
-        """ returns objects dictionary """
+        """ returns the objects dictionary """
+
         return self.__objects
 
     def new(self, obj):
-        """ sets in object dict the new obj with key obj.id """
-        self.__objects.update({f"{obj.__class__.__name__}.{obj.id}":obj})
+        """ sets the objects dict """
+
+        self.__objects.update({f"{obj.__class__.__name__}.{obj.id}": obj})
 
     def save(self):
-        """ serializes the obj dict to json file """
+        """ serializes objects to a json file """
+
         new_dict = {}
         for key, value in self.__objects.items():
             new_dict[key] = value.to_dict()
@@ -27,11 +30,18 @@ class FileStorage:
             json.dump(new_dict, f)
 
     def reload(self):
-        """ deserliazes the objects from json file """
+        """ deserializes objects from a json file """
+
+        from models.base_model import BaseModel
         try:
             with open(self.__file_path, "r") as f:
-                objects = json.load(f)
-            for key, value in objects.items():
-                self.new(value)
+                json_dict = json.load(f)
+            for value in json_dict.values():
+                self.new(BaseModel(**value))
+                """
+                the object being sent to new() is a
+                base mode instance initialized with
+                value kwargs
+                """
         except IOError:
             pass
