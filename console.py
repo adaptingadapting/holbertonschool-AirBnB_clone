@@ -86,6 +86,8 @@ class HBNBCommand(cmd.Cmd):
         split_args = line_args.split()
         if len(split_args) < 1:
             print([f"{str(val)}" for val in storage.all().values()])
+        elif split_args[0] == "BaseModel":
+            print([f"{str(val)}" for val in storage.all().values()])
         elif split_args[0] != "BaseModel":
             print("** class doesn't exist **")
 
@@ -97,17 +99,38 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif split_args[0] != "BaseModel":
             print("** class doesn't exist **")
-        elif split_args[0] == "BaseModel" and len(split_args) < 2:
+        elif len(split_args) < 2:
             print("** instance id missing **")
         elif f"BaseModel.{split_args[1]}" not in storage.all().keys():
             print("** no instance found **")
-        elif split_args[0] == "BaseModel" and len(split_args) < 3:
+        elif len(split_args) < 3:
             print("** attribute name missing **")
-        elif split_args[0] == "BaseModel" and len(split_args) < 4:
+        elif len(split_args) < 4:
             print("** value missing **")
         else:
+            if split_args[3].isdigit():
+                casted_arg = int(split_args[3])
+            elif split_args[3].count(".") == 1:
+                if not split_args[3].endswith(".") and not\
+                   split_args[3].startswith("."):
+                    if split_args[3].replace(".", "2").isdigit():
+                        casted_arg = float(split_args[3])
+                    else:
+                        casted_arg = str(split_args[3])
+                else:
+                    casted_arg = str(split_args[3])
+            else:
+                casted_arg = str(split_args[3])
+            if type(casted_arg) is str:
+                if casted_arg.startswith('"') and casted_arg.endswith('"') and\
+                   casted_arg.count('"') % 2 == 0:
+                    casted_arg = casted_arg[1:len(casted_arg) - 1]
+                if casted_arg.startswith("'") and casted_arg.endswith("'") and\
+                   casted_arg.count("'") % 2 == 0:
+                    casted_arg = casted_arg[1:len(casted_arg) - 1]
             setattr(storage.all()[f"BaseModel.{split_args[1]}"],
-                    split_args[2], split_args[3])
+                    split_args[2], casted_arg)
+            storage.save()
 
 
 if __name__ == '__main__':
