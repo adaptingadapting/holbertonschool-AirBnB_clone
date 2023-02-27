@@ -6,6 +6,9 @@ import cmd
 
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
+
+classes = {"BaseModel": BaseModel, "User": User}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -41,8 +44,8 @@ class HBNBCommand(cmd.Cmd):
         split_args = line_args.split()
         if len(split_args) < 1:
             print("** class name missing **")
-        elif split_args[0] == "BaseModel":
-            new_instance = BaseModel()
+        elif split_args[0] in classes.keys():
+            new_instance = classes[split_args[0]]()
             new_instance.save()
             print(new_instance.id)
         else:
@@ -54,13 +57,13 @@ class HBNBCommand(cmd.Cmd):
         split_args = line_args.split()
         if len(split_args) < 1:
             print("** class name missing **")
-        elif split_args[0] == "BaseModel" and len(split_args) < 2:
+        elif len(split_args) < 2:
             print("** instance id missing **")
-        elif split_args[0] != "BaseModel":
+        elif split_args[0] not in classes.keys():
             print("** class doesn't exist **")
-        elif f"BaseModel.{split_args[1]}" in storage.all().keys():
+        elif f"{split_args[0]}.{split_args[1]}" in storage.all().keys():
             usable_dict = storage.all()
-            print(usable_dict[f"BaseModel.{split_args[1]}"])
+            print(usable_dict[f"{split_args[0]}.{split_args[1]}"])
         else:
             print("** no instance found **")
 
@@ -70,12 +73,12 @@ class HBNBCommand(cmd.Cmd):
         split_args = line_args.split()
         if len(split_args) < 1:
             print("** class name missing **")
-        elif split_args[0] == "BaseModel" and len(split_args) < 2:
+        elif len(split_args) < 2:
             print("** instance id missing **")
-        elif split_args[0] != "BaseModel":
+        elif split_args[0] not in classes.keys():
             print("** class doesn't exist **")
-        elif f"BaseModel.{split_args[1]}" in storage.all().keys():
-            del storage.all()[f"BaseModel.{split_args[1]}"]
+        elif f"{split_args[0]}.{split_args[1]}" in storage.all().keys():
+            del storage.all()[f"{split_args[0]}.{split_args[1]}"]
             storage.save()
         else:
             print("** no instance found **")
@@ -85,10 +88,18 @@ class HBNBCommand(cmd.Cmd):
 
         split_args = line_args.split()
         if len(split_args) < 1:
-            print([f"{str(val)}" for val in storage.all().values()])
-        elif split_args[0] == "BaseModel":
-            print([f"{str(val)}" for val in storage.all().values()])
-        elif split_args[0] != "BaseModel":
+            print([str(val) for val in storage.all().values()])
+        elif split_args[0] in classes.keys():
+            """
+            list_to_print = []
+            for key, value in storage.all().items():
+                if key[0:len(split_args[0])] == split_args[0]:
+                    list_to_print.append(str(value))
+            print(list_to_print)
+            """
+            print([str(val) for key, val in storage.all().items() if
+                   key[0:len(split_args[0])] == split_args[0]])
+        else:
             print("** class doesn't exist **")
 
     def do_update(self, line_args):
@@ -97,11 +108,11 @@ class HBNBCommand(cmd.Cmd):
         split_args = line_args.split()
         if len(split_args) < 1:
             print("** class name missing **")
-        elif split_args[0] != "BaseModel":
+        elif split_args[0] not in classes.keys():
             print("** class doesn't exist **")
         elif len(split_args) < 2:
             print("** instance id missing **")
-        elif f"BaseModel.{split_args[1]}" not in storage.all().keys():
+        elif f"{split_args[0]}.{split_args[1]}" not in storage.all().keys():
             print("** no instance found **")
         elif len(split_args) < 3:
             print("** attribute name missing **")
@@ -128,7 +139,7 @@ class HBNBCommand(cmd.Cmd):
                 if casted_arg.startswith("'") and casted_arg.endswith("'") and\
                    casted_arg.count("'") % 2 == 0:
                     casted_arg = casted_arg[1:len(casted_arg) - 1]
-            setattr(storage.all()[f"BaseModel.{split_args[1]}"],
+            setattr(storage.all()[f"{split_args[0]}.{split_args[1]}"],
                     split_args[2], casted_arg)
             storage.save()
 
