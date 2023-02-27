@@ -33,11 +33,14 @@ class FileStorage:
         """ deserializes objects from a json file """
 
         from models.base_model import BaseModel
+        from models.user import User
+        classes = {"BaseModel": BaseModel, "User": User}
+
         try:
             with open(self.__file_path, "r") as f:
                 json_dict = json.load(f)
             for value in json_dict.values():
-                self.new(BaseModel(**value))
+                self.new(classes[value["__class__"]](**value))
                 """
                 the object being sent to new() is a
                 base mode instance initialized with
