@@ -32,31 +32,13 @@ class test_file_storage(unittest.TestCase):
         storage.new(new_model)
         self.assertTrue(key in storage.all().keys())
 
-    def test_save(self):
+    def test_save_and_reload(self):
         """ tests the save  method """
 
         storage = FileStorage()
         new_model = BaseModel()
         key = f"BaseModel.{new_model.id}"
-        
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
 
-        storage.new(new_model)
-        storage.save()
-        storage.all().clear()
-        storage.reload()
-        self.assertTrue(key in storage.all())
-
-    def test_reload(self):
-        """ tests the reload method """
-
-        storage = FileStorage()
-        new_model = BaseModel()
-        key = f"BaseModel.{new_model.id}"
-        
         try:
             os.remove("file.json")
         except IOError:
