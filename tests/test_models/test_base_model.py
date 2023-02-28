@@ -10,10 +10,10 @@ from models.engine.file_storage import FileStorage
 
 class test_base_model(unittest.TestCase):
     """ tests the base model class """
-        
+
     def test_save(self):
         """ tests the save method """
-        
+
         storage = FileStorage()
         storage.all().clear()
         my_model = BaseModel()
@@ -34,6 +34,7 @@ class test_base_model(unittest.TestCase):
 
         new_base_model = BaseModel()
         self.assertIsInstance(new_base_model.to_dict(), dict)
+        self.assertEqual(new_bae_model.id, new_base_model.to_dict()["id"])
 
     def test_self_id(self):
         """ tests wheter the model can be assigned an id """
