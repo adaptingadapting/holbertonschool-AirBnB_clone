@@ -7,7 +7,7 @@ import json
 class FileStorage:
     """ defines a class that serializes and de serializes with json """
 
-    __file_path = "json.file"
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):
