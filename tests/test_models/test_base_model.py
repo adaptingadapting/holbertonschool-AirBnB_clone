@@ -34,7 +34,7 @@ class test_base_model(unittest.TestCase):
 
         new_base_model = BaseModel()
         self.assertIsInstance(new_base_model.to_dict(), dict)
-        self.assertEqual(new_bae_model.id, new_base_model.to_dict()["id"])
+        self.assertEqual(new_base_model.id, new_base_model.to_dict()["id"])
 
     def test_self_id(self):
         """ tests wheter the model can be assigned an id """
