@@ -46,7 +46,7 @@ It will work exactly like the Shell Command Line Interpreter but with a specific
 ![image](https://user-images.githubusercontent.com/113607320/221898249-434c18b2-41d0-4b68-b47b-9180ad1584f2.png)
 
 
-#AUTHORS
+# AUTHORS
 
 - Agustin Curuchet <5739@holbertonstudents.com>
 - Gabriel Blasina <5722@holbertonstudents.com>
