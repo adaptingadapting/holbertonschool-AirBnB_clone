@@ -48,8 +48,8 @@ It will work exactly like the Shell Command Line Interpreter but with a specific
 
 #AUTHORS
 
-Agustin Curuchet <5739@holbertonstudents.com>
-Gabriel Blasina <5722@holbertonstudents.com>
+- Agustin Curuchet <5739@holbertonstudents.com>
+- Gabriel Blasina <5722@holbertonstudents.com>
 
 
 
